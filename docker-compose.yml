@@ -1,0 +1,26 @@
+services:
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: app
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - /app/node_modules
+
+  db:
+    image: postgres
+    restart: always
+    container_name: db
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /data/postgres
+    volumes:
+      - db_data:/data/postgres
+volumes:
+  db_data:

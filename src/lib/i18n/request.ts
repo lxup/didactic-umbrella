@@ -14,17 +14,15 @@ export default getRequestConfig(async ({ requestLocale }) => {
   let messages = {};
   try {
     messages = (await import(`../../messages/${locale}.json`)).default;
-  } catch (error) {}
+  } catch {}
   const fallbackLocale = getFallbackLanguage({ locale });
   if (fallbackLocale !== locale) {
     let messagesFallback = {};
     try {
       messagesFallback = (await import(`../../messages/${fallbackLocale}.json`)).default;
-    } catch (error) {}
+    } catch {}
     messages = deepmerge(messagesFallback, messages);
   }
-
-
   return {
     locale,
     messages: messages,

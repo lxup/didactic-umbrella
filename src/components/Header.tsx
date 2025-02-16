@@ -1,11 +1,18 @@
+import { cn } from "@/lib/utils";
 import ThemeToggle from "./ThemeToggle";
+import { Link } from "@/lib/i18n/routing";
+import { site } from "@/constants/site";
 
-const Header = () => {
+const Header = ({
+	className,	
+} : {
+	className?: string;
+}) => {
 	return (
-		<div className="flex justify-between items-center w-full p-4 bg-red-500/10">
-			<h1>Header</h1>
+		<header className={cn("flex justify-between items-center w-full p-2", className)}>
+			<Link href={'/'}><h1>{site.title}</h1></Link>
 			<ThemeToggle />
-		</div>
+		</header>
 	)
 };
 
