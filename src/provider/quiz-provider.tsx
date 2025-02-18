@@ -1,61 +1,88 @@
 "use client";
 
-import React, { createContext, useReducer, useContext } from "react";
-
-interface QuizProgress {
-	id: number;
-	currentQuestionIndex: number;
-	answers: Record<number, string>; // Clé = question ID, valeur = réponse
-}
-
-interface QuizState {
-	activeQuiz: QuizProgress | null;
-}
-
-type QuizAction =
-	| { type: "START_QUIZ"; payload: { id: number } }
-	| { type: "ANSWER_QUESTION"; payload: { questionId: number; answer: string; } }
-	| { type: "RESET_QUIZ" };
-
-const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
-	switch (action.type) {
-		case "START_QUIZ":
-			return {
-				activeQuiz: {
-					id: action.payload.id,
-					currentQuestionIndex: 0,
-					answers: {},
-				},
-			};
-		case "ANSWER_QUESTION":
-			if (!state.activeQuiz) return state;
-			const { questionId, answer } = action.payload;
-			return {
-				activeQuiz: {
-					...state.activeQuiz,
-					currentQuestionIndex: state.activeQuiz.currentQuestionIndex + 1,
-					answers: { ...state.activeQuiz.answers, [questionId]: answer },
-				},
-			};
-		case "RESET_QUIZ":
-			return { activeQuiz: null };
-		default:
-			return state;
-	}
-};
+import { useRouter } from "@/lib/i18n/routing";
+import { Quiz } from "@/types/type.db";
+import React, { createContext, useContext, useState } from "react";
 
 interface QuizContextProps {
-	state: QuizState;
-	dispatch: React.Dispatch<QuizAction>;
+	quiz: Quiz | null;
+	answers: Record<number, number>; // questionId -> answerId
+	currentQuestionIndex: number;
+	isFinished: boolean;
+	isLoading: boolean;
+	startQuiz: (quiz: Quiz) => void;
+	answerQuestion: (questionId: number, answerId: number) => Promise<void>;
+	resetQuiz: () => void;
 }
 
 const QuizContext = createContext<QuizContextProps | undefined>(undefined);
 
-const QuizProvider = ({ children }: { children: React.ReactNode }) => {
-	const [state, dispatch] = useReducer(quizReducer, { activeQuiz: null });
+interface QuizProviderProps {
+	children: React.ReactNode;
+}
+
+const QuizProvider = ({ children }: QuizProviderProps) => {
+	const router = useRouter();
+	const [quiz, setQuiz] = useState<Quiz | null>(null);
+	const [answers, setAnswers] = useState<Record<number, number>>({});
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+	const [isFinished, setIsFinished] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const startQuiz = (quiz: Quiz) => {
+		setQuiz(quiz);
+		setAnswers({});
+		setCurrentQuestionIndex(0);
+		setIsFinished(false);
+	};
+
+	const answerQuestion = async (questionId: number, answerId: number) => {
+		setAnswers((prev) => ({ ...prev, [questionId]: answerId }));
+		if (currentQuestionIndex >= quiz!.questions.length - 1) {
+			await finishQuiz();
+		} else {
+			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+		}
+	};
+
+	const resetQuiz = () => {
+		setQuiz(null);
+		setAnswers({});
+		setCurrentQuestionIndex(0);
+		setIsFinished(false);
+		setIsLoading(false);
+	};
+
+	const finishQuiz = async () => {
+		setIsFinished(true);
+		setIsLoading(true);
+		const resultId = 1;
+		// Save answers to the server
+		// await saveAnswers(answers);
+		router.push(`/quiz/${quiz!.slug}/results?resultId=${resultId}`);
+		resetQuiz();
+	}
+
+	// console.log(`
+	// quiz: ${quiz?.id ?? null},
+	// currentQuestionIndex: ${currentQuestionIndex},
+	// isFinished: ${isFinished},
+	// isLoading: ${isLoading},
+	// `)
 
 	return (
-		<QuizContext.Provider value={{ state, dispatch }}>
+		<QuizContext.Provider
+			value={{
+				quiz,
+				answers,
+				currentQuestionIndex,
+				isFinished,
+				isLoading,
+				startQuiz,
+				answerQuestion,
+				resetQuiz,
+			}}
+		>
 			{children}
 		</QuizContext.Provider>
 	);

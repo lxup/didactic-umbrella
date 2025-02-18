@@ -4,12 +4,10 @@ const site = {
 	author: {
 		name: "lxup",
 		socials: {
-			github: {
-				username: "lxup",
-				url: "https://github.com/lxup",
-			}
+			github: "lxup",
 		} 
-	}
+	},
+	defaultLocale: "fr",
 };
 
 export { site }

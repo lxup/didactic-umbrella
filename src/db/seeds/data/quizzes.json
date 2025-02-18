@@ -7,8 +7,15 @@
 		"questions": [
 			{
 				"translations": {
-					"en": "What is the name of the French Parliament building?",
-					"fr": "Comment s'appelle le bâtiment du Parlement français?"
+					"fr": "Repas à 1€ pour tous les étudiants?",
+					"en": "€1 meal for all students?"
+				},
+				"answer_type_id": 1
+			},
+			{
+				"translations": {
+					"fr": "Indexer les salaires sur l'inflation?",
+					"en": "Index salaries to inflation?"
 				},
 				"answer_type_id": 1
 			}

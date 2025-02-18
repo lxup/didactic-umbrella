@@ -23,6 +23,11 @@ export const answer = pgTable("answer", {
 	type: answerTypeEnum("type").notNull(),
 });
 
+export const answerRelations = relations(answer, ({ many }) => ({
+	choices: many(answerChoice),
+	questions: many(question),
+}));
+
 export const answerChoice = pgTable("answer_choice", {
 	id: integer().primaryKey().generatedByDefaultAsIdentity(),
 	answerId: integer('answer_id').notNull().references(() => answer.id, { onDelete: "cascade" }),
@@ -31,6 +36,11 @@ export const answerChoice = pgTable("answer_choice", {
 	index("answer_choice_answer_id_index").on(table.answerId),
 	unique("answer_choice_answer_choice_unique").on(table.answerId, table.choice)
 ]);
+
+export const answerChoiceRelations = relations(answerChoice, ({ one, many }) => ({
+	answer: one(answer, { fields: [answerChoice.answerId], references: [answer.id] }),
+	results: many(resultAnswer)
+}));
 
 export const question = pgTable("question", {
 	id: integer().primaryKey().generatedByDefaultAsIdentity(),
@@ -54,7 +64,6 @@ export const questionTranslation = pgTable("question_translation", {
 	id: integer().primaryKey().generatedByDefaultAsIdentity(),
 	questionId: integer('question_id').notNull().references(() => question.id, { onDelete: "cascade" }),
 	content: text("content").notNull(),
-	// locale: localesEnum().default("en").notNull(),
 	locale: varchar({ length: 5 }).default("en").notNull(),
 }, (table) => [
 	index("question_translation_question_id_index").on(table.questionId),
