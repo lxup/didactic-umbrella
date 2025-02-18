@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import { site } from "@/constants/site";
 import db from "@/db";
@@ -41,6 +41,15 @@ const getQuizBySlug = async (slug: string): Promise<Quiz | null> => {
 	} : null;
 };
 
+const getResultById = async (resultId: string) => {
+	const result = await db.query.result
+		.findFirst({
+			where: (result, { eq }) => eq(result.id, resultId),
+		});
+	return result;
+};
+
 export {
 	getQuizBySlug,
+	getResultById
 }

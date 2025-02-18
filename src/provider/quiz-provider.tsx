@@ -1,12 +1,16 @@
 "use client";
 
+import { saveQuizResult } from "@/actions/quiz/mutations";
 import { useRouter } from "@/lib/i18n/routing";
 import { Quiz } from "@/types/type.db";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface QuizContextProps {
 	quiz: Quiz | null;
-	answers: Record<number, number>; // questionId -> answerId
+	answers: {
+		questionId: number;
+		answerChoiceId: number;
+	}[],
 	currentQuestionIndex: number;
 	isFinished: boolean;
 	isLoading: boolean;
@@ -24,22 +28,25 @@ interface QuizProviderProps {
 const QuizProvider = ({ children }: QuizProviderProps) => {
 	const router = useRouter();
 	const [quiz, setQuiz] = useState<Quiz | null>(null);
-	const [answers, setAnswers] = useState<Record<number, number>>({});
+	const [answers, setAnswers] = useState<{
+		questionId: number;
+		answerChoiceId: number;
+	}[]>([]);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	const [isFinished, setIsFinished] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const startQuiz = (quiz: Quiz) => {
 		setQuiz(quiz);
-		setAnswers({});
+		setAnswers([]);
 		setCurrentQuestionIndex(0);
 		setIsFinished(false);
 	};
 
 	const answerQuestion = async (questionId: number, answerId: number) => {
-		setAnswers((prev) => ({ ...prev, [questionId]: answerId }));
+		setAnswers((prev) => [...prev, { questionId, answerChoiceId: answerId }]);
 		if (currentQuestionIndex >= quiz!.questions.length - 1) {
-			await finishQuiz();
+			setIsFinished(true);
 		} else {
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
 		}
@@ -47,28 +54,33 @@ const QuizProvider = ({ children }: QuizProviderProps) => {
 
 	const resetQuiz = () => {
 		setQuiz(null);
-		setAnswers({});
+		setAnswers([]);
 		setCurrentQuestionIndex(0);
 		setIsFinished(false);
 		setIsLoading(false);
 	};
 
 	const finishQuiz = async () => {
-		setIsFinished(true);
-		setIsLoading(true);
-		const resultId = 1;
-		// Save answers to the server
-		// await saveAnswers(answers);
-		router.push(`/quiz/${quiz!.slug}/results?resultId=${resultId}`);
-		resetQuiz();
+		if (!quiz) return;
+		try {
+			setIsLoading(true);
+			const resultId = await saveQuizResult({
+				quizId: quiz.id,
+				answers: answers,
+			})
+			router.push(`/quiz/${quiz!.slug}/results?resultId=${resultId}`);
+		} catch {
+
+		} finally {
+			resetQuiz();
+		}
 	}
 
-	// console.log(`
-	// quiz: ${quiz?.id ?? null},
-	// currentQuestionIndex: ${currentQuestionIndex},
-	// isFinished: ${isFinished},
-	// isLoading: ${isLoading},
-	// `)
+	useEffect(() => {
+		if (isFinished) {
+			finishQuiz();
+		}
+	}, [isFinished]);
 
 	return (
 		<QuizContext.Provider

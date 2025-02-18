@@ -37,9 +37,9 @@ export const answerChoice = pgTable("answer_choice", {
 	unique("answer_choice_answer_choice_unique").on(table.answerId, table.choice)
 ]);
 
-export const answerChoiceRelations = relations(answerChoice, ({ one, many }) => ({
+export const answerChoiceRelations = relations(answerChoice, ({ one }) => ({
 	answer: one(answer, { fields: [answerChoice.answerId], references: [answer.id] }),
-	results: many(resultAnswer)
+	// results: many(resultAnswer),
 }));
 
 export const question = pgTable("question", {
@@ -76,7 +76,7 @@ export const questionTranslationRelations = relations(questionTranslation, ({ on
 }));
 
 export const result = pgTable("result", {
-	id: uuid().primaryKey(),
+	id: uuid().primaryKey().defaultRandom(),
 	quizId: integer('quiz_id').notNull().references(() => quiz.id, { onDelete: "cascade" }),
 }, (table) => [
 	index("result_quiz_id_index").on(table.quizId)
@@ -91,5 +91,6 @@ export const resultAnswer = pgTable("result_answer", {
 }, (table) => [
 	index("result_answer_result_id_index").on(table.resultId),
 	index("result_answer_question_id_index").on(table.questionId),
-	index("result_answer_answer_choice_id_index").on(table.answerChoiceId)
+	index("result_answer_answer_choice_id_index").on(table.answerChoiceId),
+	check("result_answer_value_check", sql`${table.answerChoiceId} IS NOT NULL OR ${table.value} IS NOT NULL`)
 ]);

@@ -1,4 +1,4 @@
-import { getQuizBySlug } from "@/actions/quiz";
+import { getQuizBySlug } from "@/actions/quiz/queries";
 import { notFound } from "next/navigation";
 import Quiz from "./_components/Quiz";
 
