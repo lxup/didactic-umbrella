@@ -1,16 +1,11 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { DATABASE_URL } from '../../drizzle.config';
-import schema from './schema';
-// import * as configSchema from './schema/config';
-// import * as quizSchema from './schema/quiz';
+import * as schema from './schema';
 
 const db = drizzle(DATABASE_URL, {
 	schema,
-	// schema: {
-	// 	...configSchema,
-	// 	...quizSchema,
-	// }
+	logger: true,
 });
 
 export type Db = typeof db;

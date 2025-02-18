@@ -1,0 +1,12 @@
+[
+	{
+		"id": 1,
+		"name": "Vote",
+		"type": "single_choice",
+		"choices": [
+			"for",
+			"against",
+			"abstain"
+		]
+	}
+]
