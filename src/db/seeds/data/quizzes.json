@@ -1,0 +1,17 @@
+[
+	{
+		"id": 1,
+		"slug": "hemicycle",
+		"title": "Hemicycle",
+		"iso_3166_1": "FR",
+		"questions": [
+			{
+				"translations": {
+					"en": "What is the name of the French Parliament building?",
+					"fr": "Comment s'appelle le bâtiment du Parlement français?"
+				},
+				"answer_type_id": 1
+			}
+		]
+	}
+]

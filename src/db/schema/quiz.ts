@@ -1,10 +1,3 @@
-// import * as Config from './public';
-// import * as Quiz from './quiz';
-
-// const Schema = Object.assign({}, Config, Quiz);
-
-// export default Schema;
-
 import { check, index, integer, pgSchema, text, unique, uuid, varchar } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 

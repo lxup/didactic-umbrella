@@ -1,19 +1,9 @@
-import { Pool } from "pg";
-import { DATABASE_URL } from "../../drizzle.config";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { Db } from "@/db";
+import quizzes from './data/quizzes.json';
+import { answerChoices, answerTypes, questions, questionTranslations, quizzes } from "@/db/schema/quiz";
 import { and, inArray, notInArray, sql } from "drizzle-orm";
-import { answerChoices, answerTypes, questions, questionTranslations, quizzes } from "./schema/quiz";
-import Quizzes from "./seeds/quizzes";
-import AnswerTypes from "./seeds/answerType";
 
-const client = new Pool({
-	connectionString: DATABASE_URL,
-});
-const db = drizzle(client);
-
-const seedQuiz = async () => {
-	console.log("Seeding quizzes");
-	// Add answer types
+export default async function seed(db: Db) {
 	await db.insert(answerTypes).values(AnswerTypes.flatMap((answerType) => ({ id: answerType.id, name: answerType.name, type: answerType.type }))).onConflictDoUpdate({ target: [answerTypes.id], set: { name: sql.raw("excluded.name"), type: sql.raw("excluded.type") }});
 	await db.insert(answerChoices).values(AnswerTypes.flatMap((answerType) => answerType.choices.map((choice) => ({ answerTypeId: answerType.id, choice })))).onConflictDoNothing();
 	await db.delete(answerChoices).where(and(
@@ -40,18 +30,4 @@ const seedQuiz = async () => {
 			target: [questionTranslations.questionId, questionTranslations.locale],
 			set: { content: sql.raw("excluded.content") },
 		});
-};
-
-const main = async () => {
-	console.log("Seeding started");
-	await seedQuiz();
-};
-
-main().then(() => {
-	console.log("Seeding completed");
-	process.exit(0);
-}).catch((error) => {
-	console.error("Seeding failed");
-	console.error(error);
-	process.exit(1);
-});
+}
