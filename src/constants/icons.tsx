@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CheckIcon, Loader2Icon, LucideIcon, LucideProps } from "lucide-react";
+import { CheckIcon, CopyIcon, DownloadIcon, LinkIcon, Loader2Icon, LucideIcon, LucideProps } from "lucide-react";
 
 export type Icon = LucideIcon;
 
@@ -9,6 +9,9 @@ const Icons = {
 	loader: ({ className, ...props }: LucideProps) => (
 		<Icons.spinner className={cn('animate-spin', className)} {...props} />
 	),
+	link: LinkIcon,
+	download: DownloadIcon,
+	copy: CopyIcon,
 }
 
 export default Icons;

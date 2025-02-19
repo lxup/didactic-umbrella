@@ -40,10 +40,6 @@ const Home = async (
 				</Card>
 			))}
 		</div>
-		{/* <h1>SALAM</h1>
-		<Button asChild>
-			<Link href="/quiz/hemicycle">Commencer</Link>
-		</Button> */}
 	</div>
 	);
 };

@@ -8,6 +8,7 @@ import { getFallbackLanguage } from "@/lib/i18n/fallback";
 import deepmerge from "deepmerge";
 import { ThemeProvider } from "next-themes";
 import { QuizProvider } from "@/provider/quiz-provider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,16 @@ export default async function LocaleLayout({
             disableTransitionOnChange={true}
             >
             {children}
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                style: {
+                  borderRadius: '10px',
+                  background: '#333',
+                  color: '#fff',
+                },
+              }}
+            />
             </ThemeProvider>
           </QuizProvider>
         </NextIntlClientProvider>

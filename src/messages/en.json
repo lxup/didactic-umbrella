@@ -1,6 +1,11 @@
 {
 	"common": {
-		"country": "Country"
+		"country": "Country",
+		"results": "Results",
+		"select_language": "Select language",
+		"copy_link": "Copy link",
+		"download_image": "Download image",
+		"share_your_results": "Share your results"
 	},
 	"pages": {
 		"quiz": {

@@ -1,62 +1,68 @@
 import { getResultById } from "@/actions/quiz/queries";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
+import { entity } from '@/db/schema';
+import { upperCase } from 'lodash';
 
 interface MatchBasedResultsProps
-	extends React.ComponentProps<'div'> {
+	extends React.ComponentProps<'ul'> {
 		result: NonNullable<Awaited<ReturnType<typeof getResultById>>>;
 	}
 
 
 const MatchBasedResults = forwardRef<
-	HTMLDivElement,
+	HTMLUListElement,
 	MatchBasedResultsProps
 >(({ result, className, ...props }, ref) => {
-	const entityStats = new Map();
+	const entityResults = result.answers
+		.flatMap((answer) =>
+			answer.question.entityAnswers.map((entityAnswer) => ({
+				entity: entityAnswer.entity,
+				isMatching: answer.answerChoiceId === entityAnswer.answerChoiceId,
+			}))
+		)
+		.reduce((acc, { entity, isMatching }) => {
+			let entityData = acc.find((e) => e.entity.id === entity.id);
 
-	result.answers.forEach((answer) => {
-		answer.question.entityAnswers.forEach((entityAnswer) => {
-			const entityId = entityAnswer.entity.id;
-			if (!entityStats.has(entityId)) {
-				entityStats.set(entityId, {
-					entity: entityAnswer.entity,
+			if (!entityData) {
+				entityData = {
+					entity,
 					matchingAnswers: 0,
 					totalAnswers: 0,
-				});
+				};
+				acc.push(entityData);
 			}
 
-			const entityData = entityStats.get(entityId);
 			entityData.totalAnswers++;
+			if (isMatching) entityData.matchingAnswers++;
 
-			if (answer.answerChoiceId === entityAnswer.answerChoiceId) {
-				entityData.matchingAnswers++;
-			}
-		});
-	});
+			return acc;
+		}, [] as { entity: typeof entity.$inferSelect; matchingAnswers: number; totalAnswers: number }[])
 
-	const entityResults = Array.from(entityStats.values())
 		.map(({ entity, matchingAnswers, totalAnswers }) => ({
 			entity,
 			percentage: totalAnswers > 0 ? Math.round((matchingAnswers / totalAnswers) * 100) : 0,
 		}))
 		.sort((a, b) => b.percentage - a.percentage);
-
 	return (
-		<div
-			ref={ref}
-			className={cn('p-4', className)}
-			{...props}
+		<ul
+		ref={ref}
+		className={cn('space-y-2', className)}
+		{...props}
 		>
-			<h2 className="text-xl font-bold mb-4">Votre correspondance</h2>
-			<ul className="space-y-3">
-				{entityResults.map(({ entity, percentage }) => (
-					<li key={entity.id} className="p-3 border rounded-lg flex justify-between">
-						<span>{entity.name}</span>
-						<span className="font-bold">{percentage}%</span>
-					</li>
-				))}
-			</ul>
-		</div>
+			{entityResults.map(({ entity, percentage }) => (
+				<li key={entity.id} className="p-3 border rounded-lg flex justify-between items-center">
+					<div className="flex items-center gap-2">
+						<div className="aspect-square relative w-10">
+							<ImageWithFallback src={entity.image ?? ''} alt={entity.name} fill />
+						</div>
+						<span className="line-clamp-1">{entity.name} ({upperCase(entity.slug)})</span>
+					</div>
+					<span className="font-bold">{percentage}%</span>
+				</li>
+			))}
+		</ul>
 	);
 });
 MatchBasedResults.displayName = "MatchBasedResults";
