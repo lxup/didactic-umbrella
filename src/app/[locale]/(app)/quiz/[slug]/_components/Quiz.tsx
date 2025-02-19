@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import Icons from "@/constants/icons";
 import { useQuiz } from "@/provider/quiz-provider";
 import { type Quiz } from "@/types/type.db";
+import { capitalize } from "lodash";
 import { useEffect } from "react";
 
 interface QuizProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -52,7 +53,7 @@ const Quiz = ({ quiz: initQuiz }: QuizProps) => {
 			<Progress value={(currentQuestionIndex) * 100 / quiz.questions!.length} />
 			<Card>
 				{currentQuestion.theme ? <CardHeader>
-					<CardTitle>{currentQuestion.theme}</CardTitle>
+					<CardTitle>{capitalize(currentQuestion.theme)}</CardTitle>
 				</CardHeader> : null}
 				<CardContent className={currentQuestion.theme ? 'pt-0' : 'pt-6'}>
 					<p className="bg-muted rounded-md p-2">{currentQuestion.content}</p>

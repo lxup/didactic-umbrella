@@ -45,7 +45,6 @@ const ShareResults = forwardRef<
 			const element = document.getElementById(`quiz-results-${result.id}`);
 			if (!element) throw new Error('Failed to find element');
 		
-			// Créer un canvas
 			const canvas = document.createElement('canvas');
 			canvas.width = 1080;
 			canvas.height = 1920;

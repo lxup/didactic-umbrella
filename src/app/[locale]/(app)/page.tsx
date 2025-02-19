@@ -17,9 +17,14 @@ const Home = async (
 	const quizzes = await getQuizzes();
 	const t = await getTranslations({ locale: params.locale, namespace: 'common' });
 	return (
-	<div className="flex flex-col items-center gap-2 py-2">
+	<div className="@container/home flex flex-col items-center gap-2 p-2">
 		<h1 className="text-4xl font-bold">Quizzes</h1>
-		<div className="grid grid-cols-1 gap-2">
+		<div
+		className={`
+			grid max-w-4xl w-full gap-2
+			grid-cols-1 @sm/home:grid-cols-2 @lg/home:grid-cols-3
+		`}
+		>
 			{quizzes.map((quiz) => (
 				<Card key={quiz.id}>
 					<CardHeader>
