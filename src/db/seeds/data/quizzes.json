@@ -4,20 +4,43 @@
 		"slug": "hemicycle",
 		"title": "Hemicycle",
 		"iso_3166_1": "FR",
+		"type": "match_based",
+		"image": "",
 		"questions": [
 			{
 				"translations": {
 					"fr": "Repas à 1€ pour tous les étudiants?",
 					"en": "€1 meal for all students?"
 				},
-				"answer_type_id": 1
+				"theme": "social",
+				"answer_type_id": 1,
+				"entitie_answers": [
+					{
+						"entity_slug": "lfi",
+						"answer": "for"
+					}
+				]
 			},
 			{
 				"translations": {
 					"fr": "Indexer les salaires sur l'inflation?",
 					"en": "Index salaries to inflation?"
 				},
-				"answer_type_id": 1
+				"theme": "economy",
+				"answer_type_id": 1,
+				"entitie_answers": [
+					{
+						"entity_slug": "lfi",
+						"answer": "for"
+					}
+				]
+			}
+		],
+		"entities": [
+			{
+				"slug": "lfi",
+				"name": "La France Insoumise",
+				"image": "https://upload.wikimedia.org/wikipedia/fr/0/07/La_France_insoumise_logo_2024.svg"
 			}
 		]
 	}

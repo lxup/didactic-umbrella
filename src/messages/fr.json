@@ -1,13 +1,13 @@
 {
 	"common": {
-		"country": "Country"
+		"country": "Pays"
 	},
 	"pages": {
 		"quiz": {
 			"results": {
 				"meta": {
-					"title": "Results",
-					"description": "Your results"
+					"title": "Résultats",
+					"description": "Vos résultats"
 				}
 			}
 		}

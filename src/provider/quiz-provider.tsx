@@ -45,7 +45,7 @@ const QuizProvider = ({ children }: QuizProviderProps) => {
 
 	const answerQuestion = async (questionId: number, answerId: number) => {
 		setAnswers((prev) => [...prev, { questionId, answerChoiceId: answerId }]);
-		if (currentQuestionIndex >= quiz!.questions.length - 1) {
+		if (currentQuestionIndex >= quiz!.questions!.length - 1) {
 			setIsFinished(true);
 		} else {
 			setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
@@ -68,7 +68,7 @@ const QuizProvider = ({ children }: QuizProviderProps) => {
 				quizId: quiz.id,
 				answers: answers,
 			})
-			router.push(`/quiz/${quiz!.slug}/results?resultId=${resultId}`);
+			router.push(`/quiz/${quiz!.slug}/results/${resultId}`);
 		} catch {
 
 		} finally {

@@ -41,20 +41,20 @@ const Quiz = ({ quiz: initQuiz }: QuizProps) => {
 		<Icons.check />
 	);
 
-	const currentQuestion = quiz.questions[currentQuestionIndex];
+	const currentQuestion = quiz.questions![currentQuestionIndex];
 
 	return (
 		<div className="flex flex-col gap-2 max-w-xl w-full h-[50vh]">
 			<div className="flex justify-between items-center gap-2">
 				<h2 className="font-bold">Question {currentQuestionIndex + 1}</h2>
-				<p className="text-xs font-semibold text-muted-foreground">{currentQuestionIndex} / {quiz.questions.length}</p>
+				<p className="text-xs font-semibold text-muted-foreground">{currentQuestionIndex} / {quiz.questions!.length}</p>
 			</div>
-			<Progress value={(currentQuestionIndex) * 100 / quiz.questions.length} />
+			<Progress value={(currentQuestionIndex) * 100 / quiz.questions!.length} />
 			<Card>
-				<CardHeader>
-					<CardTitle>Economie</CardTitle>
-				</CardHeader>
-				<CardContent>
+				{currentQuestion.theme ? <CardHeader>
+					<CardTitle>{currentQuestion.theme}</CardTitle>
+				</CardHeader> : null}
+				<CardContent className={currentQuestion.theme ? 'pt-0' : 'pt-6'}>
 					<p className="bg-muted rounded-md p-2">{currentQuestion.content}</p>
 				</CardContent>
 			</Card>

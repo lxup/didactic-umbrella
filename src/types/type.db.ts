@@ -13,5 +13,5 @@ export type Question = typeof question.$inferSelect & {
 }
 
 export type Quiz = typeof quiz.$inferSelect & {
-	questions: Question[];
+	questions?: Question[];
 }

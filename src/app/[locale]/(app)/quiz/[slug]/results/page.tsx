@@ -1,37 +1,26 @@
-import { getResultById } from "@/actions/quiz/queries";
-import { z } from "zod";
+import { getTranslations } from "next-intl/server";
 
-const searchParamsSchema = z.object({
-	resultId: z.preprocess(
-		(value) => value?.toString(),
-		z.string().uuid()
-	),
-});
-const QuizResults = async (
-	props: {
-		searchParams?: Promise<{
-			resultId: string | undefined;
-		}>;
-	}
-) => {
-	const searchParams = searchParamsSchema.safeParse(await props.searchParams);
-	const result = searchParams.success ? await getResultById(searchParams.data.resultId!) : null;
+export async function generateMetadata(
+    props: {
+        params: Promise<{
+          locale: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+    const common = await getTranslations({ locale: params.locale, namespace: 'pages.quiz.results' });
+    return {
+		title: common('meta.title'),
+		description: common('meta.description'),
+	};
+}
 
-	if (!result) {
-		return (
-		<div>
-			No result found
-		</div>
-		);
-	}
-
-	
+const ResultsPage = () => {
 	return (
-	<div>
-		result bleeeeeehhh {result.id}
-		{JSON.stringify(result)}
-	</div>
+		<div>
+			Results are here
+		</div>
 	)
 };
 
-export default QuizResults;
+export default ResultsPage;

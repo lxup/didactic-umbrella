@@ -2,6 +2,7 @@ import { Db } from "@/db";
 import answers from './data/answers.json';
 import { and, inArray, notInArray, sql } from "drizzle-orm";
 import { answerChoice, answer } from "@/db/schema";
+import { Answer } from "@/types/type.db";
 
 export default async function seed(db: Db) {
 	await db
@@ -10,7 +11,7 @@ export default async function seed(db: Db) {
 			answers.flatMap((answer) => ({
 				id: answer.id,
 				name: answer.name,
-				type: answer.type
+				type: answer.type as Answer['type']
 			}))
 		)
 		.onConflictDoUpdate({

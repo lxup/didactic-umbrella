@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "npm run db:push && npm run db:seed && next start",
     "lint": "next lint",
     "type-check": "tsc -b",
     "format": "prettier --write .",
@@ -24,6 +24,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "country-flag-icons": "^1.5.16",
     "deepmerge": "^4.3.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.3",

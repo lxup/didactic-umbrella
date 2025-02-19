@@ -5,7 +5,7 @@ import * as schema from './schema';
 
 const db = drizzle(DATABASE_URL, {
 	schema,
-	logger: true,
+	// logger: true,
 });
 
 export type Db = typeof db;
