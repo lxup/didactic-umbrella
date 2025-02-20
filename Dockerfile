@@ -15,6 +15,9 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# Drizzle config
+COPY --chown=node:node src/db ./src/db
+COPY --chown=node:node drizzle.config.ts ./
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -33,6 +36,9 @@ RUN \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
+
+# Seed the database
+RUN npm run db:push && npm run db:seed
 
 # Production image, copy all the files and run next
 FROM base AS runner

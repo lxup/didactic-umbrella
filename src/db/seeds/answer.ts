@@ -1,17 +1,16 @@
-import { Db } from "@/db";
+import { Db } from "../";
 import answers from './data/answers.json';
 import { and, inArray, notInArray, sql } from "drizzle-orm";
-import { answerChoice, answer } from "@/db/schema";
-import { Answer } from "@/types/type.db";
+import { answerChoice, answer } from "../schema";
 
 export default async function seed(db: Db) {
 	await db
 		.insert(answer)
 		.values(
-			answers.flatMap((answer) => ({
-				id: answer.id,
-				name: answer.name,
-				type: answer.type as Answer['type']
+			answers.flatMap((answerItem) => ({
+				id: answerItem.id,
+				name: answerItem.name,
+				type: answerItem.type as typeof answer.$inferInsert['type']
 			}))
 		)
 		.onConflictDoUpdate({

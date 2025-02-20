@@ -1,5 +1,5 @@
 import * as seeds from "./seeds";
-import db from "@/db";
+import db from "./";
 
 const main = async () => {
 	console.log("Seeding started");
