@@ -1,6 +1,6 @@
 import { getQuizBySlug } from "@/actions/quiz/queries";
 import { notFound } from "next/navigation";
-import Quiz from "./_components/Quiz";
+import Quiz from "../../../../../components/Quiz/Quiz";
 
 const QuizPage = async (
 	props: {

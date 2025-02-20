@@ -10,6 +10,7 @@ import { useLocalizedLanguageName } from "@/hooks/use-localized-language-name";
 import { useLocale, useTranslations } from "next-intl";
 import { upperCase } from "lodash";
 import { useParams } from "next/navigation";
+import { useDevice } from "@/hooks/use-device";
 
 const LocaleSwitch = () => {
 	const locale = useLocale();
@@ -19,6 +20,7 @@ const LocaleSwitch = () => {
   	const params = useParams();
 	const locales = useLocalizedLanguageName(routing.locales);
 	const [isPending, startTransition] = useTransition();
+	const device = useDevice();
 
 	const onLocaleChange = (locale: string) => {
 		const nextLocale = locale;
@@ -34,7 +36,7 @@ const LocaleSwitch = () => {
 	};
 	return (
 		<Fragment>
-			<div className="hidden sm:block">
+			{device === 'desktop' ? (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 					<Button variant="outline" className="flex items-center gap-2">
@@ -57,61 +59,43 @@ const LocaleSwitch = () => {
 						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
-			</div>
-			<div className="sm:hidden">
-				<Drawer>
-					<DrawerTrigger asChild>
-						<Button variant="outline" className="flex items-center gap-2">
-						<GlobeIcon className="h-5 w-5" />
-						<span>{upperCase(locale)}</span>
-						<ChevronDownIcon className="h-4 w-4" />
+			) : (
+			<Drawer>
+				<DrawerTrigger asChild>
+					<Button variant="outline" className="flex items-center gap-2">
+					<GlobeIcon className="h-5 w-5" />
+					<span>{upperCase(locale)}</span>
+					<ChevronDownIcon className="h-4 w-4" />
+					</Button>
+				</DrawerTrigger>
+				<DrawerContent>
+					<div className="grid gap-4 p-4">
+					<div className="flex items-center justify-between">
+						<h3 className="text-lg font-medium">{t('select_language')}</h3>
+						<DrawerClose asChild>
+						<Button variant="ghost" size="icon" className="h-8 w-8">
+							<XIcon className="h-5 w-5" />
 						</Button>
-					</DrawerTrigger>
-					<DrawerContent>
-						<div className="grid gap-4 p-4">
-						<div className="flex items-center justify-between">
-							<h3 className="text-lg font-medium">{t('select_language')}</h3>
-							<DrawerClose asChild>
-							<Button variant="ghost" size="icon" className="h-8 w-8">
-								<XIcon className="h-5 w-5" />
+						</DrawerClose>
+					</div>
+					<div className="grid gap-2">
+						{locales.map((item) => (
+							<Button
+							key={item.language}
+							variant="ghost"
+							className="justify-start gap-2"
+							onClick={() => onLocaleChange(item.language)}
+							disabled={isPending}
+							>
+								<span>{item.flag} {item.iso_639_1}</span>
+								{locale === item.language && <CheckIcon className="h-5 w-5 ml-auto" />}
 							</Button>
-							</DrawerClose>
-						</div>
-						<div className="grid gap-2">
-							{locales.map((item) => (
-								<Button
-								key={item.language}
-								variant="ghost"
-								className="justify-start gap-2"
-								onClick={() => onLocaleChange(item.language)}
-								disabled={isPending}
-								>
-									<span>{item.flag} {item.iso_639_1}</span>
-									{locale === item.language && <CheckIcon className="h-5 w-5 ml-auto" />}
-								</Button>
-							))}
-							{/* <Button variant="ghost" className="justify-start gap-2">
-							<GlobeIcon className="h-5 w-5" />
-							<span>English</span>
-							<CheckIcon className="h-5 w-5 ml-auto" />
-							</Button>
-							<Button variant="ghost" className="justify-start gap-2">
-							<GlobeIcon className="h-5 w-5" />
-							<span>Español</span>
-							</Button>
-							<Button variant="ghost" className="justify-start gap-2">
-							<GlobeIcon className="h-5 w-5" />
-							<span>Français</span>
-							</Button>
-							<Button variant="ghost" className="justify-start gap-2">
-							<GlobeIcon className="h-5 w-5" />
-							<span>Deutsch</span>
-							</Button> */}
-						</div>
-						</div>
-					</DrawerContent>
-				</Drawer>
-			</div>
+						))}
+					</div>
+					</div>
+				</DrawerContent>
+			</Drawer>
+			)}
 		</Fragment>
 	)
 };

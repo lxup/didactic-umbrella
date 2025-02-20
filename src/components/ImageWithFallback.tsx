@@ -6,7 +6,7 @@ import { ImageIcon } from 'lucide-react';
 
 interface ImageWithFallbackProps extends ComponentProps<typeof Image> {
   src: string;
-  type?: 'default' | 'users';
+  type?: 'default' | 'alt';
   blurDataURL?: string;
 }
 
@@ -39,7 +39,7 @@ export const ImageWithFallback = ({
           {...rest}
         />
       ) : (
-        <Fallback className={cn('', className)} type={type} from="#363636" to="#363636" alt={alt} />
+        <Fallback className={cn('', className)} type={type} alt={alt} />
       )}
     </>
   );
@@ -50,22 +50,27 @@ export function Fallback({
   type,
   from,
   to,
+  alt,
 }: {
   className?: string;
   type?: string | null;
-  from: string;
-  to: string;
+  from?: string;
+  to?: string;
   alt: string;
 }) {
   return (
     <div
       style={{
-        backgroundImage: `linear-gradient(to top right, ${from}, ${to})`,
+        backgroundImage: (from && to) ? `linear-gradient(to top right, ${from}, ${to})` : '',
       }}
-      className={cn(`w-full flex items-center justify-center h-full`, className)}
+      className={cn(
+        `w-full flex items-center justify-center h-full overflow-hidden`,
+        !(from && to) && 'bg-muted',
+        className
+      )}
     >
-      {type == 'users' ? (
-       <></>
+      {type == 'alt' ? (
+       <p>{alt}</p>
       ) : (
         <ImageIcon color="#fff" className="w-2/5 h-2/5" />
       )}

@@ -9,6 +9,8 @@ import deepmerge from "deepmerge";
 import { ThemeProvider } from "next-themes";
 import { QuizProvider } from "@/provider/quiz-provider";
 import { Toaster } from "react-hot-toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import NextTopLoader from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,17 +55,25 @@ export default async function LocaleLayout({
             enableSystem={true}
             disableTransitionOnChange={true}
             >
-            {children}
-            <Toaster
-              position="top-center"
-              toastOptions={{
-                style: {
-                  borderRadius: '10px',
-                  background: '#333',
-                  color: '#fff',
-                },
-              }}
-            />
+            <TooltipProvider delayDuration={100}>
+              <NextTopLoader
+                showSpinner={false}
+                easing="ease"
+                color="#FFE974"
+                height={2}
+              />
+              {children}
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  style: {
+                    borderRadius: '10px',
+                    background: '#333',
+                    color: '#fff',
+                  },
+                }}
+              />
+            </TooltipProvider>
             </ThemeProvider>
           </QuizProvider>
         </NextIntlClientProvider>

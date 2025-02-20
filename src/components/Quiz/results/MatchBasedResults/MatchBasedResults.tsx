@@ -55,7 +55,7 @@ const MatchBasedResults = forwardRef<
 				<li key={entity.id} className="p-3 border rounded-lg flex justify-between items-center">
 					<div className="flex items-center gap-2">
 						<div className="aspect-square relative w-10">
-							<ImageWithFallback src={entity.image ?? ''} alt={entity.name} fill />
+							<ImageWithFallback type="alt" src={entity.image ?? ''} alt={upperCase(entity.slug)} fill />
 						</div>
 						<span className="line-clamp-1">{entity.name} ({upperCase(entity.slug)})</span>
 					</div>

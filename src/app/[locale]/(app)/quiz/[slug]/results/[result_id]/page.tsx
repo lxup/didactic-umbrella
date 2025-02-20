@@ -1,8 +1,8 @@
 import { getResultById } from "@/actions/quiz/queries";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
-import MatchBasedResults from "./_components/MatchBasedResults";
-import ShareResults from "./_components/ShareResults";
+import MatchBasedResults from "@/components/Quiz/results/MatchBasedResults/MatchBasedResults";
+import ShareResults from "@/components/Quiz/results/ShareResults";
 
 export async function generateMetadata(
     props: {

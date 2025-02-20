@@ -1,5 +1,7 @@
 {
 	"common": {
+		"next": "Next",
+		"previous": "Previous",
 		"country": "Country",
 		"results": "Results",
 		"select_language": "Select language",

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CheckIcon, CopyIcon, DownloadIcon, LinkIcon, Loader2Icon, LucideIcon, LucideProps } from "lucide-react";
+import { CheckIcon, ChevronLeft, ChevronRight, CopyIcon, DownloadIcon, LinkIcon, Loader2Icon, LucideIcon, LucideProps } from "lucide-react";
 
 export type Icon = LucideIcon;
 
@@ -12,6 +12,8 @@ const Icons = {
 	link: LinkIcon,
 	download: DownloadIcon,
 	copy: CopyIcon,
+	previous: ChevronLeft,
+	next: ChevronRight,
 }
 
 export default Icons;

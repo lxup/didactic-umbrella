@@ -8,6 +8,7 @@ import { useQuiz } from "@/provider/quiz-provider";
 import { type Quiz } from "@/types/type.db";
 import { capitalize } from "lodash";
 import { useEffect } from "react";
+import Navigation from "./Navigation";
 
 interface QuizProps extends React.HTMLAttributes<HTMLDivElement> {
 	quiz: Quiz;
@@ -45,7 +46,7 @@ const Quiz = ({ quiz: initQuiz }: QuizProps) => {
 	const currentQuestion = quiz.questions![currentQuestionIndex];
 
 	return (
-		<div className="flex flex-col gap-2 max-w-xl w-full h-[50vh]">
+		<div className="@container/quiz flex flex-col gap-2 max-w-xl w-full h-[50vh]">
 			<div className="flex justify-between items-center gap-2">
 				<h2 className="font-bold">Question {currentQuestionIndex + 1}</h2>
 				<p className="text-xs font-semibold text-muted-foreground">{currentQuestionIndex} / {quiz.questions!.length}</p>
@@ -64,6 +65,7 @@ const Quiz = ({ quiz: initQuiz }: QuizProps) => {
 				answerChoices={currentQuestion.answer.choices!}
 				onAnswerSelect={async (answer) => await answerQuestion(currentQuestion.id, answer)}
 			/>
+			<Navigation />
 		</div>
 	);
 };
